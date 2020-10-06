@@ -92,7 +92,9 @@ tr {
 
 
 .editor-year {
-    max-width: 48px;
+    max-width: 72px;
+    font-size: 24px;
+    color: #2E294E;
 }
 
 .label-month,

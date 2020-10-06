@@ -23,7 +23,7 @@ export default class extends React.Component {
 	months = moment.months();
 
 	year = () => {
-		return this.state.dateContext.format("Y");
+		return this.state.dateContext.format('Y');
 	};
 	month = () => {
 		return this.state.dateContext.format('MMMM ');
@@ -34,8 +34,9 @@ export default class extends React.Component {
 	currentDate = () => {
 		return this.state.dateContext.get('date');
 	};
+
 	currentDay = () => {
-		return this.state.dateContext.format('D');
+				return parseInt(this.state.dateContext.format('D'));
 	};
 
 	firstDayofMonth = () => {
@@ -55,7 +56,7 @@ export default class extends React.Component {
 
 	nextMonth = () => {
 		let dateContext = Object.assign({}, this.state.dateContext);
-		dateContext = moment(dateContext).add(1, "month");
+		dateContext = moment(dateContext).add(1, 'month');
 		this.setState({
 			dateContext: dateContext
 		});
@@ -198,10 +199,11 @@ export default class extends React.Component {
 				</td>
 			);
 		}
-		console.log('blanks: ', blanks);
-
+		
 		let daysInMonth = [];
+		console.log("d", this.daysInMonth())
 		for (let d = 1; d <= this.daysInMonth(); d++) {
+			console.log ("current day is: ",this.currentDay(), d)
 			let className = d === this.currentDay() ? 'day current-day' : 'day';
 			let selectedClass = d === this.state.selectedDay ? ' selected-day ' : ' ';
 			daysInMonth.push(
@@ -216,8 +218,6 @@ export default class extends React.Component {
 				</td>
 			);
 		}
-
-		console.log('days: ', daysInMonth);
 
 		var totalSlots = [...blanks, ...daysInMonth];
 		let rows = [];
