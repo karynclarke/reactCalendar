@@ -7,7 +7,8 @@ export default class extends React.Component {
 		dateContext: moment(),
 		today: moment(),
 		showMonthPopup: false,
-		showYearPopup: false
+		showYearPopup: false,
+		selectedDay: null
 	};
 
 	constructor(props) {
@@ -22,10 +23,10 @@ export default class extends React.Component {
 	months = moment.months();
 
 	year = () => {
-		return this.state.dateContext.format('Y');
+		return this.state.dateContext.format("Y");
 	};
 	month = () => {
-		return this.state.dateContext.format('MMMM');
+		return this.state.dateContext.format('MMMM ');
 	};
 	daysInMonth = () => {
 		return this.state.dateContext.daysInMonth();
@@ -50,60 +51,61 @@ export default class extends React.Component {
 		this.setState({
 			dateContext: dateContext
 		});
-  };
-  
-nextMonth = () => {
-let dateContext = Object.assign ({}, this.state.dateContext);
-dateContext = moment(dateContext).add (1, "month");
-this.setState({
-  dateContext: dateContext
-});
-this.props.onNextMonth && this.props.onMonthChange();
+	};
 
-}
+	nextMonth = () => {
+		let dateContext = Object.assign({}, this.state.dateContext);
+		dateContext = moment(dateContext).add(1, "month");
+		this.setState({
+			dateContext: dateContext
+		});
+		this.props.onNextMonth && this.props.onMonthChange();
+	};
 
-prevMonth = () => {
-let dateContext = Object.assign({}, this.state.dateContext);
-dateContext = moment(dateContext).subtract(1, 'month');
-this.setState({
-	dateContext: dateContext
-});
-this.props.onPrevMonth && this.props.onMonthChange();
-
-}
+	prevMonth = () => {
+		let dateContext = Object.assign({}, this.state.dateContext);
+		dateContext = moment(dateContext).subtract(1, 'month');
+		this.setState({
+			dateContext: dateContext
+		});
+		this.props.onPrevMonth && this.props.onMonthChange();
+	};
 
 	onSelectChange = (e, data) => {
 		this.setMonth(data);
 		this.props.onMonthChange && this.props.onMonthChange();
-	}
-  
-  SelectList = (props) => {
-        let popup = props.data.map((data) => {
-            return (
-                <div key={data}>
-                    <a href=" # " onClick={(e)=> {this.onSelectChange(e, data)}}>
-                        {data}
-                    </a>
-                </div>
-            );
-        });
+	};
 
-		return (
-    <div className="month-popup">{popup}</div>
-    );
-	}
+	SelectList = props => {
+		let popup = props.data.map(data => {
+			return (
+				<div key={data}>
+					<a
+						href=" # "
+						onClick={e => {
+							this.onSelectChange(e, data);
+						}}
+					>
+						{data}
+					</a>
+				</div>
+			);
+		});
+
+		return <div className="month-popup">{popup}</div>;
+	};
 
 	onChangeMonth = (e, month) => {
 		this.setState({
 			showMonthPopup: !this.state.showMonthPopup
 		});
-	}
+	};
 
 	MonthNav = () => {
 		return (
 			<span
-				className="label-month"
-				onClick={(e) => {
+				className="label-month "
+				onClick={e => {
 					this.onChangeMonth(e, this.month());
 				}}
 			>
@@ -111,103 +113,109 @@ this.props.onPrevMonth && this.props.onMonthChange();
 				{this.state.showMonthPopup && <this.SelectList data={this.months} />}
 			</span>
 		);
-	}
+	};
 
 	showYearEditor = () => {
 		this.setState({
 			showYearNav: true
 		});
-	}
+	};
 
-	setYear = (year) => {
+	setYear = year => {
 		let dateContext = Object.assign({}, this.state.dateContext);
 		dateContext = moment(dateContext).set('year', year);
 		this.setState({
 			dateContext: dateContext
-		})
-	}
+		});
+	};
 
-	onYearChange = (e) => {
+	onYearChange = e => {
 		this.setYear(e.target.value);
 		this.props.onYearChange && this.props.onYearChange(e, e.target.value);
-	}
+	};
 
-	onKeyUpYear = (e) => {
+	onKeyUpYear = e => {
 		if (e.which === 13 || e.which === 27) {
 			this.setYear(e.target.value);
 			this.setstate({
 				showYearNav: false
-			})
+			});
 		}
-	}
+	};
 
 	YearNav = () => {
-		return (
-      this.state.showYearNav ? 
+		return this.state.showYearNav ? (
 			<input
 				defaultValue={this.year()}
 				className="editor-year"
-				ref={(yearInput) => {
+				ref={yearInput => {
 					this.yearInput = yearInput;
 				}}
-				onKeyUp={(e) => this.onKeyUpYear(e)}
-				onChange={(e) => this.onYearChange(e)}
+				onKeyUp={e => this.onKeyUpYear(e)}
+				onChange={e => this.onYearChange(e)}
 				type="number"
-				placeholder="year"/>
-		 : 
+				placeholder="year"
+			/>
+		) : (
 			<span
 				className="label-year"
-				onDoubleClick={(e) => {
-					this.showYearEditor()}}>
+				onDoubleClick={e => {
+					this.showYearEditor();
+				}}
+			>
 				{this.year()}
 			</span>
 		);
-  }
-  
-onDayClick = (e, day) => {
-        this.setState({
-            selectedDay: day
-        }, () => {
-            console.log("SELECTED DAY: ", this.state.selectedDay);
-        });
+	};
 
-        this.props.onDayClick && this.props.onDayClick(e, day);
-    }
+	onDayClick = (e, day) => {
+		this.setState(
+			{
+				selectedDay: day
+			},
+			() => {
+				console.log('SELECTED DAY: ', this.state.selectedDay);
+			}
+		);
 
-	render(){
-		let weekdays = this.weekdaysShort.map((day) => {
+		this.props.onDayClick && this.props.onDayClick(e, day);
+	};
+
+	render() {
+		let weekdays = this.weekdaysShort.map(day => {
 			return (
 				<td key={day} className="week-day">
-									{day}	</td>
-			)
+					{day}
+				</td>
+			);
 		});
 
 		let blanks = [];
 		for (let i = 0; i < this.firstDayofMonth(); i++) {
 			blanks.push(
 				<td key={i * 80} className="emptySlot">
-					{" "}
+					{' '}
 				</td>
 			);
 		}
-		console.log("blanks: ", blanks);
+		console.log('blanks: ', blanks);
 
-    let daysInMonth = [];
-	for (let d = 1; d <= this.daysInMonth(); d++) {
-		let className = (d === this.currentDay() ? "day current-day" : "day");
-		let selectedClass = (d === this.state.selectedDay ? " selected-day " : " ")
-		daysInMonth.push(
-			<td key={d} className={className + selectedClass}>
-				<span
-					onClick={(e) => {
-						this.onDayClick(e, d)}}
-				>
-					{d}
-				</span>
-			</td>
-		);
-	}
-    
+		let daysInMonth = [];
+		for (let d = 1; d <= this.daysInMonth(); d++) {
+			let className = d === this.currentDay() ? 'day current-day' : 'day';
+			let selectedClass = d === this.state.selectedDay ? ' selected-day ' : ' ';
+			daysInMonth.push(
+				<td key={d} className={className + selectedClass}>
+					<span
+						onClick={e => {
+							this.onDayClick(e, d);
+						}}
+					>
+						{d}
+					</span>
+				</td>
+			);
+		}
 
 		console.log('days: ', daysInMonth);
 
@@ -231,37 +239,31 @@ onDayClick = (e, day) => {
 		});
 
 		let trElems = rows.map((d, i) => {
-      return (
-      <tr key={i * 100}>{d}</tr>
-    );
-		})
-
+			return <tr key={i * 100}>{d}</tr>;
+		});
 		return (
 			<div className="calendar-container" style={this.style}>
 				<table className="calendar">
 					<thead>
 						<tr className="calendar-header">
-						<td colSpan="5">
-							<this.MonthNav /> 
-              {""}
-              <this.YearNav />
-						</td>
-						<td colSpan="2" className="nav-month">
-							<i
-								className="prev fa fa-fw fa-chevron-left"
-								onClick={(e) => {
-									this.prevMonth();
-								}}
-							></i>
-							<i
-								className="prev fa fa-fw fa-chevron-right"
-								onClick={(e) => {
-									this.nextMonth();
-								}}
-							></i>
-
-						</td>
-            </tr>
+							<td colSpan="5">
+								<this.MonthNav /> <this.YearNav />
+							</td>
+							<td colSpan="2" className="nav-month">
+								<i
+									className="prev fa fa-fw fa-chevron-circle-left"
+									onClick={e => {
+										this.prevMonth();
+									}}
+								></i>
+								<i
+									className="prev fa fa-fw fa-chevron-circle-right"
+									onClick={e => {
+										this.nextMonth();
+									}}
+								></i>
+							</td>
+						</tr>
 					</thead>
 					<tbody>
 						<tr>{weekdays}</tr>

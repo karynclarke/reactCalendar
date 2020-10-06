@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 
-import Calendar from './Components/Calendar';
+import Calendar from './Components/Calendar/';
 
 const style = {
 	position: 'relative',
@@ -12,11 +12,11 @@ class App extends Component {
   onDayClick = (e, day) => {
     alert (day);
   }
-  
+
 	render() {
 		return (
 			<div className="App">
-        <Calendar style={style} width="302px" 
+        <Calendar style={style} width="400px" 
         onDayClick= {(e, day) => this.onDayClick(e,day)} />
 			</div>
 		);
