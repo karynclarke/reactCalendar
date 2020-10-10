@@ -26,6 +26,7 @@ export default class extends React.Component {
 		return this.state.dateContext.format('Y');
 	};
 	month = () => {
+		console.log('month is' + this.state.dateContext.format('MMMM'));
 		return this.state.dateContext.format('MMMM ');
 	};
 	daysInMonth = () => {
@@ -34,9 +35,8 @@ export default class extends React.Component {
 	currentDate = () => {
 		return this.state.dateContext.get('date');
 	};
-
 	currentDay = () => {
-				return parseInt(this.state.dateContext.format('D'));
+		return parseInt(this.state.dateContext.format('D'));
 	};
 
 	firstDayofMonth = () => {
@@ -135,14 +135,14 @@ export default class extends React.Component {
 		this.props.onYearChange && this.props.onYearChange(e, e.target.value);
 	};
 
-	onKeyUpYear = e => {
-		if (e.which === 13 || e.which === 27) {
-			this.setYear(e.target.value);
-			this.setstate({
-				showYearNav: false
-			});
-		}
-	};
+	// onKeyUpYear = e => {
+	// 	// if (e.which >1990 || e.which < 2050) {
+	// 	// 	this.setYear(e.target.value);
+	// 	// 	this.setstate({
+	// 	// 		showYearNav: false
+	// 	// 	});
+	// 	// }
+	// };
 
 	YearNav = () => {
 		return this.state.showYearNav ? (
@@ -160,7 +160,7 @@ export default class extends React.Component {
 		) : (
 			<span
 				className="label-year"
-				onDoubleClick={e => {
+				onClick={e => {
 					this.showYearEditor();
 				}}
 			>
@@ -178,8 +178,6 @@ export default class extends React.Component {
 				console.log('SELECTED DAY: ', this.state.selectedDay);
 			}
 		);
-
-		this.props.onDayClick && this.props.onDayClick(e, day);
 	};
 
 	render() {
@@ -199,12 +197,18 @@ export default class extends React.Component {
 				</td>
 			);
 		}
-		
+
 		let daysInMonth = [];
-		console.log("d", this.daysInMonth())
+		console.log('d', this.daysInMonth());
 		for (let d = 1; d <= this.daysInMonth(); d++) {
-			console.log ("current day is: ",this.currentDay(), d)
-			let className = d === this.currentDay() ? 'day current-day' : 'day';
+			var currentMonth = new Date().getMonth();
+			var displayMonth = this.state.dateContext.month();
+			let className = '';
+			if (displayMonth === currentMonth && d === this.currentDate()) className = 'day current-day';
+			else {
+				className = 'day';
+			}
+			
 			let selectedClass = d === this.state.selectedDay ? ' selected-day ' : ' ';
 			daysInMonth.push(
 				<td key={d} className={className + selectedClass}>
@@ -241,6 +245,7 @@ export default class extends React.Component {
 		let trElems = rows.map((d, i) => {
 			return <tr key={i * 100}>{d}</tr>;
 		});
+
 		return (
 			<div className="calendar-container" style={this.style}>
 				<table className="calendar">
