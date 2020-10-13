@@ -130,19 +130,20 @@ export default class extends React.Component {
 		});
 	};
 
-	onYearChange = e => {
+	onYearChange = (e) => {
 		this.setYear(e.target.value);
 		this.props.onYearChange && this.props.onYearChange(e, e.target.value);
 	};
 
-	// onKeyUpYear = e => {
-	// 	// if (e.which >1990 || e.which < 2050) {
-	// 	// 	this.setYear(e.target.value);
-	// 	// 	this.setstate({
-	// 	// 		showYearNav: false
-	// 	// 	});
-	// 	// }
-	// };
+	onKeyUpYear = (e) => {
+		if (e.which > 0 || e.which < 2100) {
+			this.setYear(e.target.value);
+			this.setState({
+				showYearNav: false
+					});
+		};
+		// else {alert("please enter a year")}
+	};
 
 	YearNav = () => {
 		return this.state.showYearNav ? (
@@ -208,7 +209,7 @@ export default class extends React.Component {
 			else {
 				className = 'day';
 			}
-			
+
 			let selectedClass = d === this.state.selectedDay ? ' selected-day ' : ' ';
 			daysInMonth.push(
 				<td key={d} className={className + selectedClass}>
