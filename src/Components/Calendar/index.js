@@ -142,9 +142,7 @@ export default class extends React.Component {
 				showYearNav: false
 					});
 		};
-		// else {alert("please enter a year")}
-	};
-
+	}
 	YearNav = () => {
 		return this.state.showYearNav ? (
 			<input
@@ -176,7 +174,7 @@ export default class extends React.Component {
 				selectedDay: day
 			},
 			() => {
-				console.log('SELECTED DAY: ', this.state.selectedDay);
+				console.log('SELECTED DAY: ', this.state.selectedDay,this.state.dateContext.format('MMMM'), this.state.dateContext.format("YYYY"));
 			}
 		);
 	};
@@ -278,5 +276,5 @@ export default class extends React.Component {
 				</table>
 			</div>
 		);
-	}
 }
+};
